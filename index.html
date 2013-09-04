@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>drum-music-app</title>
+  </head>
+  <body>
+    <canvas id="screen" width="800" height="600"> </canvas>
+  </body>
+  <script>
+    var music = {
+      init: function() {
+        music.canvas = document.getElementById('screen')
+        music.ctx = music.canvas.getContext('2d')
+
+        music.rows = 4
+        music.cols = 8
+        music.bars = music.rows * music.cols
+
+        music.bar_width = 100
+        music.bar_height = 60
+      }
+    }
+
+    music.draw = {
+      bars: function() {
+        for(var i = 0; i < music.rows; i++) {
+          for(var j = 0; j < music.cols; j++) {
+            var col = (4 * (i * music.cols + j) + 64).toString(16)
+            music.ctx.save()
+            music.ctx.fillStyle = '#0000'+col
+            music.ctx.strokeRect(j * music.bar_width, i * music.bar_height, music.bar_width, music.bar_height)
+            music.ctx.fillRect(j * music.bar_width, i * music.bar_height, music.bar_width, music.bar_height)
+            music.ctx.restore()
+
+            music.ctx.save()
+            music.ctx.fillStyle = '#FFFFFF'
+            music.ctx.font = "bold 12px sans-serif"
+            music.ctx.textBaseline = "top"
+            music.ctx.fillText((i * music.cols + j).toString(), j * music.bar_width, i * music.bar_height)
+            music.ctx.restore()
+          }
+        }
+      }
+    }
+
+    function update() {
+      music.draw.bars()
+    }
+
+    window.addEventListener('load', music.init, false)
+    window.setInterval(update, 30)
+  </script>
+</html>
