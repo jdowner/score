@@ -26,6 +26,34 @@
             color: '#0000' + num.toString(16)
           }
         }
+
+        music.canvas.addEventListener('mousedown', music.on_mouse_down)
+      },
+
+      on_mouse_down: function(e) {
+        if(e.button == 0) {
+          music.randomize()
+        } else {
+          music.sort()
+        }
+      },
+
+      sort: function() {
+        music.bars.sort(function(a, b) { return a.id - b.id })
+      },
+
+      randomize: function() {
+        var counter = music.bars.length, temp, index;
+
+        while (counter--) {
+          // Pick a random index
+          index = (Math.random() * (counter + 1)) | 0;
+
+          // And swap the last element with it
+          temp = music.bars[counter];
+          music.bars[counter] = music.bars[index];
+          music.bars[index] = temp;
+        }
       }
     }
 
