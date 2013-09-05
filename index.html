@@ -14,10 +14,18 @@
 
         music.rows = 4
         music.cols = 8
-        music.bars = music.rows * music.cols
 
         music.bar_width = 100
         music.bar_height = 60
+
+        music.bars = new Array()
+        for(var k = 0; k < music.rows * music.cols; k++) {
+          var num = 4 * k + 64
+          music.bars[k] = {
+            id: k,
+            color: '#0000' + num.toString(16)
+          }
+        }
       }
     }
 
@@ -25,9 +33,10 @@
       bars: function() {
         for(var i = 0; i < music.rows; i++) {
           for(var j = 0; j < music.cols; j++) {
-            var col = (4 * (i * music.cols + j) + 64).toString(16)
+            var k = i * music.cols + j
+            var bar = music.bars[k]
             music.ctx.save()
-            music.ctx.fillStyle = '#0000'+col
+            music.ctx.fillStyle = bar.color
             music.ctx.strokeRect(j * music.bar_width, i * music.bar_height, music.bar_width, music.bar_height)
             music.ctx.fillRect(j * music.bar_width, i * music.bar_height, music.bar_width, music.bar_height)
             music.ctx.restore()
@@ -36,7 +45,7 @@
             music.ctx.fillStyle = '#FFFFFF'
             music.ctx.font = "bold 12px sans-serif"
             music.ctx.textBaseline = "top"
-            music.ctx.fillText((i * music.cols + j).toString(), j * music.bar_width, i * music.bar_height)
+            music.ctx.fillText(bar.id.toString(), j * music.bar_width, i * music.bar_height)
             music.ctx.restore()
           }
         }
