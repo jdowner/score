@@ -20,23 +20,28 @@
       this.ctx.clear()
     }
 
-    Renderer.prototype.draw_stave = function(x, y, width, in_stave) {
+    Renderer.prototype.draw_stave = function(x, y, width, in_stave, options) {
       // Create new vexflow stave object
       var stave = new Vex.Flow.Stave(x, y, width);
 
-//      // Add a clef if this stave has one
-//      if(in_stave.clef) {
-//        stave.addClef(in_stave.clef)
-//      }
-//      
-//      // Add a time signature if there is one
-//      if(in_stave.signature) {
-//        stave.addTimeSignature(in_stave.signature)
-//      }
-//
-//      if(in_stave.end_bar) {
-//        stave.setEndBarType(Vex.Flow.Barline.type.END)
-//      }
+      var options = options || {}
+      var clef = options.clef || null
+      var signature = options.signature || null
+      var end_bar = options.end_bar || null
+
+      // Add a clef if this stave has one
+      if(clef) {
+        stave.addClef(clef)
+      }
+
+      // Add a time signature if there is one
+      if(signature) {
+        stave.addTimeSignature(signature)
+      }
+
+      if(end_bar) {
+        stave.setEndBarType(end_bar)
+      }
 
       stave.setContext(this.ctx)
       stave.draw()
@@ -63,11 +68,18 @@
 
     Renderer.prototype.draw_score = function(score) {
       var measures_per_line = Math.floor(this.ctx.paper.width / score.measure_width)
-      for(var k = 0; k < score.staves.length; k++) {
+      this.draw_stave(0, 0, score.measure_width, score.staves[0],
+        {"clef":"percussion", "signature":"4/4"})
+      for(var k = 1; k < score.staves.length - 1; k++) {
         var x = score.measure_width * (k % measures_per_line)
         var y = score.measure_height * Math.floor(k / measures_per_line)
         this.draw_stave(x, y, score.measure_width, score.staves[k])
       }
+      var k = score.staves.length - 1
+      var x = score.measure_width * (k % measures_per_line)
+      var y = score.measure_height * Math.floor(k / measures_per_line)
+      this.draw_stave(x, y, score.measure_width, score.staves[k],
+        {"end_bar":Vex.Flow.Barline.type.END})
     }
 
     function make_note(name) {
