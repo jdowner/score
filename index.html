@@ -3,88 +3,141 @@
   <head>
     <title>drum-music-app</title>
   </head>
+  <script src="raphael-v2.1.2-min.js"></script>
+  <script src="underscore-v1.5.2-min.js"></script>
+  <script src="vexflow-min.js"></script>
   <body>
-    <canvas id="screen" width="800" height="600"> </canvas>
+    <svg id="score" width="800" height="1000"></svg>
   </body>
   <script>
-    var music = {
-      init: function() {
-        music.canvas = document.getElementById('screen')
-        music.ctx = music.canvas.getContext('2d')
+    var Renderer = function(id) {
+      canvas = document.getElementById(id)
+      this.renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.RAPHAEL)
+      this.ctx = this.renderer.getContext()
+    }
 
-        music.rows = 4
-        music.cols = 8
+    Renderer.prototype.clear = function() {
+      this.ctx.clear()
+    }
 
-        music.bar_width = 100
-        music.bar_height = 60
+    Renderer.prototype.draw_stave = function(x, y, in_stave) {
+      // Create new vexflow stave object
+      var stave = new Vex.Flow.Stave(x, y, in_stave.width);
 
-        music.bars = new Array()
-        for(var k = 0; k < music.rows * music.cols; k++) {
-          var num = 4 * k + 64
-          music.bars[k] = {
-            id: k,
-            color: '#0000' + num.toString(16)
-          }
-        }
+//      // Add a clef if this stave has one
+//      if(in_stave.clef) {
+//        stave.addClef(in_stave.clef)
+//      }
+//      
+//      // Add a time signature if there is one
+//      if(in_stave.signature) {
+//        stave.addTimeSignature(in_stave.signature)
+//      }
+//
+//      if(in_stave.end_bar) {
+//        stave.setEndBarType(Vex.Flow.Barline.type.END)
+//      }
 
-        music.canvas.addEventListener('mousedown', music.on_mouse_down)
-      },
+      stave.setContext(this.ctx)
+      stave.draw()
 
-      on_mouse_down: function(e) {
-        if(e.button == 0) {
-          music.randomize()
-        } else {
-          music.sort()
-        }
-      },
+      // Create a voice
+      var voice = new Vex.Flow.Voice({
+        num_beats: 4,
+        beat_value: 4,
+        resolution: Vex.Flow.RESOLUTION
+      });
 
-      sort: function() {
-        music.bars.sort(function(a, b) { return a.id - b.id })
-      },
+      // Add notes to the voice
+      voice.addTickables(in_stave.notes);
 
-      randomize: function() {
-        var counter = music.bars.length, temp, index;
+      // Format and justify the notes
+      var formatter = new Vex.Flow.Formatter()
+      formatter.joinVoices([voice])
+      formatter.format([voice], in_stave.width)
+      formatter.formatToStave([voice], stave)
 
-        while (counter--) {
-          // Pick a random index
-          index = (Math.random() * (counter + 1)) | 0;
+      // Draw the voice
+      voice.draw(this.ctx, stave);
+    }
 
-          // And swap the last element with it
-          temp = music.bars[counter];
-          music.bars[counter] = music.bars[index];
-          music.bars[index] = temp;
-        }
+    Renderer.prototype.draw_score = function(score) {
+      for(var i = 0; i < score.staves.length; i++) {
+        this.draw_stave(10, 100 * i, score.staves[i])
       }
     }
 
-    music.draw = {
-      bars: function() {
-        for(var i = 0; i < music.rows; i++) {
-          for(var j = 0; j < music.cols; j++) {
-            var k = i * music.cols + j
-            var bar = music.bars[k]
-            music.ctx.save()
-            music.ctx.fillStyle = bar.color
-            music.ctx.strokeRect(j * music.bar_width, i * music.bar_height, music.bar_width, music.bar_height)
-            music.ctx.fillRect(j * music.bar_width, i * music.bar_height, music.bar_width, music.bar_height)
-            music.ctx.restore()
-
-            music.ctx.save()
-            music.ctx.fillStyle = '#FFFFFF'
-            music.ctx.font = "bold 12px sans-serif"
-            music.ctx.textBaseline = "top"
-            music.ctx.fillText(bar.id.toString(), j * music.bar_width, i * music.bar_height)
-            music.ctx.restore()
-          }
-        }
-      }
+    function make_note(name) {
+      return new Vex.Flow.StaveNote({ keys: ["c/5"], duration: name})
     }
+
+    function make_notes(str) {
+      var notes = new Array()
+      var str_notes = str.split(" ")
+      for(var i = 0; i < str_notes.length; i++) {
+        notes.push(this.make_note(str_notes[i]))
+      }
+      return notes
+    }
+
+    var Stave = function(notes) {
+      this.width = 300
+      this.notes = make_notes(notes)
+    }
+
+    Stave.prototype.notes = function() {
+      return this.notes
+    }
+
+    var Score = function() {
+      this.clef = "percussion"
+      this.signature = "4/4"
+
+      this.staves = new Array()
+      this.staves.push(new Stave('8 8r 8 4 16 16 8 8'))
+      this.staves.push(new Stave('8 16r 16 8 4 16 16 8 8'))
+      this.staves.push(new Stave('4 4 4 4'))
+      this.staves.push(new Stave('8 8r 8 4 16 16 8 8'))
+      this.staves.push(new Stave('8 16r 16 8 4 16 16 8 8'))
+      this.staves.push(new Stave('4 4 4 4'))
+      this.staves.push(new Stave('8 8r 8 4 16 16 8 8'))
+      this.staves.push(new Stave('8 16r 16 8 4 16 16 8 8'))
+      this.staves.push(new Stave('4 4 4 4'))
+    }
+
+    Score.prototype.clef = function() {
+      return this.clef
+    }
+
+    Score.prototype.signature = function() {
+      return this.signature
+    }
+
+    Score.prototype.shuffle = function() {
+      this.staves = _.shuffle(this.staves)
+    }
+
+    var score = new Score()
+    var renderer = new Renderer("score")
 
     function update() {
-      music.draw.bars()
+      renderer.clear()
+      renderer.draw_score(score)
     }
 
-    window.addEventListener('load', music.init, false)
-    window.setInterval(update, 30)
+    function order() {
+    }
+
+    function init() {
+      update()
+
+      var svg = document.getElementById("score")
+      svg.addEventListener('click', function(e) {
+        score.shuffle()
+        update()
+      })
+    }
+
+    window.addEventListener('load', init, false)
   </script>
 </html>
