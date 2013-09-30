@@ -20,9 +20,9 @@
       this.ctx.clear()
     }
 
-    Renderer.prototype.draw_stave = function(x, y, in_stave) {
+    Renderer.prototype.draw_stave = function(x, y, width, in_stave) {
       // Create new vexflow stave object
-      var stave = new Vex.Flow.Stave(x, y, in_stave.width);
+      var stave = new Vex.Flow.Stave(x, y, width);
 
 //      // Add a clef if this stave has one
 //      if(in_stave.clef) {
@@ -54,7 +54,7 @@
       // Format and justify the notes
       var formatter = new Vex.Flow.Formatter()
       formatter.joinVoices([voice])
-      formatter.format([voice], in_stave.width)
+      formatter.format([voice], width)
       formatter.formatToStave([voice], stave)
 
       // Draw the voice
@@ -62,8 +62,11 @@
     }
 
     Renderer.prototype.draw_score = function(score) {
-      for(var i = 0; i < score.staves.length; i++) {
-        this.draw_stave(10, 100 * i, score.staves[i])
+      var measures_per_line = Math.floor(this.ctx.paper.width / score.measure_width)
+      for(var k = 0; k < score.staves.length; k++) {
+        var x = score.measure_width * (k % measures_per_line)
+        var y = score.measure_height * Math.floor(k / measures_per_line)
+        this.draw_stave(x, y, score.measure_width, score.staves[k])
       }
     }
 
@@ -81,7 +84,6 @@
     }
 
     var Stave = function(notes) {
-      this.width = 300
       this.notes = make_notes(notes)
     }
 
@@ -92,6 +94,8 @@
     var Score = function() {
       this.clef = "percussion"
       this.signature = "4/4"
+      this.measure_height = 100
+      this.measure_width = 300
 
       this.staves = new Array()
       this.staves.push(new Stave('8 8r 8 4 16 16 8 8'))
