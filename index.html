@@ -7,7 +7,7 @@
   <script src="underscore-v1.5.2-min.js"></script>
   <script src="vexflow-min.js"></script>
   <body>
-    <svg id="score" width="800" height="1000"></svg>
+    <svg id="score" width="1300" height="1000"></svg>
   </body>
   <script>
     var Renderer = function(id) {
@@ -107,22 +107,17 @@
       return this.notes
     }
 
-    var Score = function() {
+    var Score = function(notes) {
       this.clef = "percussion"
       this.signature = "4/4"
       this.measure_height = 100
       this.measure_width = 300
 
       this.staves = new Array()
-      this.staves.push(new Stave('8 8r 8 4 16 16 8 8'))
-      this.staves.push(new Stave('8 16r 16 8 4 16 16 8 8'))
-      this.staves.push(new Stave('4 4 4 4'))
-      this.staves.push(new Stave('8 8r 8 4 16 16 8 8'))
-      this.staves.push(new Stave('8 16r 16 8 4 16 16 8 8'))
-      this.staves.push(new Stave('4 4 4 4'))
-      this.staves.push(new Stave('8 8r 8 4 16 16 8 8'))
-      this.staves.push(new Stave('8 16r 16 8 4 16 16 8 8'))
-      this.staves.push(new Stave('4 4 4 4'))
+      var measures = notes.split(";")
+      for(var i = 0; i < measures.length; i++) {
+        this.staves.push(new Stave(measures[i].trim()))
+      }
     }
 
     Score.prototype.clef = function() {
@@ -137,7 +132,17 @@
       this.staves = _.shuffle(this.staves)
     }
 
-    var score = new Score()
+    var notes = ""
+    notes = notes + "4 4 4 4;8r 8 4 8r 4 8r;4r 4 4 4r;8r 4 8 8r 8 4r"
+    notes = notes + ";8r 8 4 4 4r; 4r 4r 4 8r 8; 4 8r 8 8r 8 4r; 4r 4 4r 4"
+    notes = notes + ";4r 8r 8 8r 8 4r; 4 4r 4 4r; 8 8 8 8 4r 4r; 4 8r 8 4r 8r 8"
+    notes = notes + ";8r 8 4 8r 8 8 8; 4r 8 8 4r 8 8; 4 8r 8 8r 8 4; 4r 4 4r 8 8"
+    notes = notes + ";8r 8 4 8r 8 8 8; 4r 8 8 4r 8 8; 4 8r 8 8r 8 4; 4r 4 4r 8 8"
+    notes = notes + ";8 8 4r 4r 8 8; 4r 8 8 8r 8 4r; 4r 4 4r 8r 8; 4 4 4r 4"
+    notes = notes + ";8r 8 4 4r 8 8; 4r 4r 4r 4; 4r 8 8 4r 8r 8; 8r 8 4 8 8 4r"
+    notes = notes + ";4r 4r 8 8 8 8; 8r 8 4 4 4r; 4r 8 8 4r 8 8r; 4 4r 8r 8 8 8"
+    notes = notes + ";4r 4 4r 8 8r; 8 8 8 8 4r 4r; 4 8r 8 4r 4; 8 8 8 8 8 8 8 8"
+    var score = new Score(notes)
     var renderer = new Renderer("score")
 
     function update() {
