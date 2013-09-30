@@ -69,11 +69,15 @@
     Renderer.prototype.draw_score = function(score) {
       var measures_per_line = Math.floor(this.ctx.paper.width / score.measure_width)
       this.draw_stave(0, 0, score.measure_width, score.staves[0],
-        {"clef":"percussion", "signature":"4/4"})
+        {"clef":score.clef, "signature":score.signature})
       for(var k = 1; k < score.staves.length - 1; k++) {
         var x = score.measure_width * (k % measures_per_line)
         var y = score.measure_height * Math.floor(k / measures_per_line)
-        this.draw_stave(x, y, score.measure_width, score.staves[k])
+        if(k % measures_per_line == 0) {
+          this.draw_stave(x, y, score.measure_width, score.staves[k], {"clef":score.clef})
+        } else {
+          this.draw_stave(x, y, score.measure_width, score.staves[k])
+        }
       }
       var k = score.staves.length - 1
       var x = score.measure_width * (k % measures_per_line)
