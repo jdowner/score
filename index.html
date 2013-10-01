@@ -64,6 +64,11 @@
 
       // Draw the voice
       voice.draw(this.ctx, stave);
+
+      // Draw any beams
+      for(var i = 0; i < in_stave.beams.length; i++) {
+        in_stave.beams[i].setContext(this.ctx).draw()
+      }
     }
 
     Renderer.prototype.draw_score = function(score) {
@@ -79,11 +84,14 @@
           this.draw_stave(x, y, score.measure_width, score.staves[k])
         }
       }
-      var k = score.staves.length - 1
-      var x = score.measure_width * (k % measures_per_line)
-      var y = score.measure_height * Math.floor(k / measures_per_line)
-      this.draw_stave(x, y, score.measure_width, score.staves[k],
-        {"end_bar":Vex.Flow.Barline.type.END})
+
+      if(score.staves.length > 1) {
+        var k = score.staves.length - 1
+        var x = score.measure_width * (k % measures_per_line)
+        var y = score.measure_height * Math.floor(k / measures_per_line)
+        this.draw_stave(x, y, score.measure_width, score.staves[k],
+          {"end_bar":Vex.Flow.Barline.type.END})
+      }
     }
 
     function make_note(name) {
@@ -99,8 +107,71 @@
       return notes
     }
 
+    function make_beam(notes) {
+      return new Vex.Flow.Beam(notes)
+    }
+
     var Stave = function(notes) {
-      this.notes = make_notes(notes)
+      this.notes = new Array()
+      this.beams = new Array()
+
+      // The beam stack is used to keep track of the notes that are a part of
+      // each beam as we iterate through the tokens
+      var beam_stack = new Array()
+
+      // Create an alias for this object so that it can be referenced in the
+      // following private functions.
+      var stave = this
+
+      var tokenize = function(str) {
+        str = str.trim()
+        str = str.replace(/8r/g, 'x')
+        str = str.replace(/4r/g, 'X')
+        str = str.replace(/\(/g, '( ')
+        str = str.replace(/\)/g, ' )')
+        str = str.replace(/  /g, ' ')
+        str = str.replace(/x/g, '8r')
+        str = str.replace(/X/g, '4r')
+        return str.split(' ')
+      }
+
+      var start_beam = function() {
+        beam_stack.push(new Array())
+      }
+
+      var end_beam = function() {
+        var beam = beam_stack.pop()
+        var notes = new Array()
+        for(var j = 0; j < beam.length; j++) {
+          notes.push(stave.notes[beam[j]])
+        }
+        stave.beams.push(make_beam(notes))
+      }
+
+      var add_note = function(token) {
+        stave.notes.push(make_note(token))
+        for(var j = 0; j < beam_stack.length; j++) {
+          beam_stack[j].push(stave.notes.length - 1)
+        }
+      }
+
+      // Iterate through the tokens and construct the notes and beams
+      var token = null
+      var tokens = tokenize(notes)
+      for(var i = 0; i < tokens.length; i++) {
+        token = tokens[i]
+        switch (token)
+        {
+          case '(':
+            start_beam()
+            break
+          case ')':
+            end_beam()
+            break
+          default:
+            add_note(token)
+        }
+      }
     }
 
     Stave.prototype.notes = function() {
@@ -135,13 +206,13 @@
     var notes = ""
     notes = notes + "4 4 4 4;8r 8 4 8r 4 8r;4r 4 4 4r;8r 4 8 8r 8 4r"
     notes = notes + ";8r 8 4 4 4r; 4r 4r 4 8r 8; 4 8r 8 8r 8 4r; 4r 4 4r 4"
-    notes = notes + ";4r 8r 8 8r 8 4r; 4 4r 4 4r; 8 8 8 8 4r 4r; 4 8r 8 4r 8r 8"
-    notes = notes + ";8r 8 4 8r 8 8 8; 4r 8 8 4r 8 8; 4 8r 8 8r 8 4; 4r 4 4r 8 8"
-    notes = notes + ";8r 8 4 8r 8 8 8; 4r 8 8 4r 8 8; 4 8r 8 8r 8 4; 4r 4 4r 8 8"
-    notes = notes + ";8 8 4r 4r 8 8; 4r 8 8 8r 8 4r; 4r 4 4r 8r 8; 4 4 4r 4"
-    notes = notes + ";8r 8 4 4r 8 8; 4r 4r 4r 4; 4r 8 8 4r 8r 8; 8r 8 4 8 8 4r"
-    notes = notes + ";4r 4r 8 8 8 8; 8r 8 4 4 4r; 4r 8 8 4r 8 8r; 4 4r 8r 8 8 8"
-    notes = notes + ";4r 4 4r 8 8r; 8 8 8 8 4r 4r; 4 8r 8 4r 4; 8 8 8 8 8 8 8 8"
+    notes = notes + ";4r (8 8) (8 8) 4r; 4 4r 4r 4; 8r 8 8r 8 4 4r; 4 4 4r 8r 8"
+    notes = notes + ";4r 8r 8 8r 8 4r; 4 4r 4 4r; (8 8 8 8) 4r 4r; 4 8r 8 4r 8r 8"
+    notes = notes + ";8r 8 4 8r 8 (8 8); 4r (8 8) 4r (8 8); 4 8r 8 8r 8 4; 4r 4 4r (8 8)"
+    notes = notes + ";(8 8) 4r 4r (8 8); 4r (8 8) 8r 8 4r; 4r 4 4r 8r 8; 4 4 4r 4"
+    notes = notes + ";8r 8 4 4r (8 8); 4r 4r 4r 4; 4r (8 8) 4r 8r 8; 8r 8 4 (8 8) 4r"
+    notes = notes + ";4r 4r (8 8 8 8); 8r 8 4 4 4r; 4r (8 8) 4r 8 8r; 4 4r 8r 8 (8 8)"
+    notes = notes + ";4r 4 4r 8 8r; (8 8 8 8) 4r 4r; 4 8r 8 4r 4; (8 8 8 8) (8 8 8 8)"
     var score = new Score(notes)
     var renderer = new Renderer("score")
 
