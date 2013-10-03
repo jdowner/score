@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
     <title>drum-music-app</title>
   </head>
   <script src="raphael-v2.1.2-min.js"></script>
   <script src="underscore-v1.5.2-min.js"></script>
   <script src="vexflow-min.js"></script>
+  <style type="text/css">
+    svg {
+      overflow: visible;
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
   <body>
-    <svg id="score" width="1300" height="1000"></svg>
+    <svg id="score" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
   </body>
   <script>
     var Renderer = function(id) {
