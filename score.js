@@ -166,11 +166,12 @@ Stave.prototype.notes = function() {
   return this.notes
 }
 
-var Score = function(notes) {
+var Score = function(id, notes) {
   this.clef = "percussion"
   this.signature = "4/4"
   this.measure_height = 100
   this.measure_width = 300
+  this.renderer = new Renderer(id)
 
   this.staves = new Array()
   var measures = notes.split("|")
@@ -189,4 +190,9 @@ Score.prototype.signature = function() {
 
 Score.prototype.shuffle = function() {
   this.staves = _.shuffle(this.staves)
+}
+
+Score.prototype.update = function() {
+  this.renderer.clear()
+  this.renderer.draw_score(this)
 }

@@ -34,24 +34,15 @@
     notes = notes + " | 8r 8 4 4r (8 8) | 4r 4r 4r 4 | 4r (8 8) 4r 8r 8 | 8r 8 4 (8 8) 4r"
     notes = notes + " | 4r 4r (8 8 8 8) | 8r 8 4 4 4r | 4r (8 8) 4r 8 8r | 4 4r 8r 8 (8 8)"
     notes = notes + " | 4r 4 4r 8 8r | (8 8 8 8) 4r 4r | 4 8r 8 4r 4 | (8 8 8 8) (8 8 8 16 16)"
-    var score = new Score(notes)
-    var renderer = new Renderer("score")
 
-    function update() {
-      renderer.clear()
-      renderer.draw_score(score)
-    }
-
-    function order() {
-    }
+    var score = new Score("score", notes)
 
     function init() {
-      update()
+      score.update()
 
-      var svg = document.getElementById("score")
-      svg.addEventListener('click', function(e) {
+      document.getElementById("score").addEventListener('click', function(e) {
         score.shuffle()
-        update()
+        score.update()
       })
     }
 
