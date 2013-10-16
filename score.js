@@ -189,7 +189,12 @@ Score.prototype.signature = function() {
 }
 
 Score.prototype.shuffle = function() {
-  this.staves = _.shuffle(this.staves)
+  for (var i = this.staves.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = this.staves[i];
+    this.staves[i] = this.staves[j];
+    this.staves[j] = tmp;
+  }
 }
 
 Score.prototype.update = function() {
