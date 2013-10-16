@@ -173,7 +173,7 @@ var Score = function(notes) {
   this.measure_width = 300
 
   this.staves = new Array()
-  var measures = notes.split(";")
+  var measures = notes.split("|")
   for(var i = 0; i < measures.length; i++) {
     this.staves.push(new Stave(measures[i].trim()))
   }
