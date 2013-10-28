@@ -102,10 +102,6 @@ Renderer.prototype.draw_score = function(score) {
   }
 }
 
-function make_beam(notes) {
-  return new Vex.Flow.Beam(notes)
-}
-
 var Stave = function(notes) {
   this.notes = new Array()
   this.beams = new Array()
@@ -140,7 +136,7 @@ var Stave = function(notes) {
     for(var j = 0; j < beam.length; j++) {
       notes.push(stave.notes[beam[j]])
     }
-    stave.beams.push(make_beam(notes))
+    stave.beams.push(new Vex.Flow.Beam(notes))
   }
 
   var add_note = function(token) {
