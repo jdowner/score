@@ -23,6 +23,7 @@
     <svg id="score" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
   </body>
   <script>
+    // Define the notes
     var notes = ""
     notes = notes + "4 4 4 4 | 8r 8 4 8r 4 8r | 4r 4 4 4r | 8r 4 8 8r 8 4r"
     notes = notes + " | 8r 8 4 4 4r | 4r 4r 4 8r 8 | 4 8r 8 8r 8 4r | 4r 4 4r 4"
@@ -34,6 +35,7 @@
     notes = notes + " | 4r 4r (8 8 8 8) | 8r 8 4 4 4r | 4r (8 8) 4r 8 8r | 4 4r 8r 8 (8 8)"
     notes = notes + " | 4r 4 4r 8 8r | (8 8 8 8) 4r 4r | 4 8r 8 4r 4 | (8 8 8 8) (8 8 8 16 16)"
 
+    // Extend the score to support shuffling
     Score.prototype.shuffle = function() {
       for (var i = this.staves.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -43,8 +45,10 @@
       }
     }
 
+    // Create a score object in the "score" element
     var score = new Score("score", notes)
 
+    // Create initialization function to update and shuffle the score
     function init() {
       score.update()
 
