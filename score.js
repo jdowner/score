@@ -203,15 +203,6 @@ Score.prototype.signature = function() {
   return this.signature
 }
 
-Score.prototype.shuffle = function() {
-  for (var i = this.staves.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = this.staves[i];
-    this.staves[i] = this.staves[j];
-    this.staves[j] = tmp;
-  }
-}
-
 Score.prototype.update = function() {
   this.renderer.clear()
   this.renderer.draw_score(this)

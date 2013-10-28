@@ -34,6 +34,15 @@
     notes = notes + " | 4r 4r (8 8 8 8) | 8r 8 4 4 4r | 4r (8 8) 4r 8 8r | 4 4r 8r 8 (8 8)"
     notes = notes + " | 4r 4 4r 8 8r | (8 8 8 8) 4r 4r | 4 8r 8 4r 4 | (8 8 8 8) (8 8 8 16 16)"
 
+    Score.prototype.shuffle = function() {
+      for (var i = this.staves.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = this.staves[i];
+        this.staves[i] = this.staves[j];
+        this.staves[j] = tmp;
+      }
+    }
+
     var score = new Score("score", notes)
 
     function init() {
