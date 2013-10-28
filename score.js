@@ -102,10 +102,6 @@ Renderer.prototype.draw_score = function(score) {
   }
 }
 
-function make_note(name) {
-  return new Vex.Flow.StaveNote({ keys: ["c/5"], duration: name})
-}
-
 function make_beam(notes) {
   return new Vex.Flow.Beam(notes)
 }
@@ -148,7 +144,8 @@ var Stave = function(notes) {
   }
 
   var add_note = function(token) {
-    stave.notes.push(make_note(token))
+    var note = new Vex.Flow.StaveNote({ keys: ["c/5"], duration: token})
+    stave.notes.push(note)
     for(var j = 0; j < beam_stack.length; j++) {
       beam_stack[j].push(stave.notes.length - 1)
     }
