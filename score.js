@@ -120,6 +120,7 @@ var Stave = function(notes) {
   // following private functions.
   var stave = this
 
+  // Poor-man's tokenizer
   var tokenize = function(str) {
     str = str.trim()
     str = str.replace(/8r/g, 'x')
@@ -132,10 +133,13 @@ var Stave = function(notes) {
     return str.split(' ')
   }
 
+  // Starts an new beam array and pushed it onto the stack
   var start_beam = function() {
     beam_stack.push(new Array())
   }
 
+  // Pops the last beam off the stack and pushes the notes in the bream to the
+  // stave.
   var end_beam = function() {
     var beam = beam_stack.pop()
     var notes = new Array()
@@ -145,6 +149,7 @@ var Stave = function(notes) {
     stave.beams.push(new Vex.Flow.Beam(notes))
   }
 
+  // Adds a new note to the current beam on the beam stack.
   var add_note = function(token) {
     var note = new Vex.Flow.StaveNote({ keys: ["c/5"], duration: token})
     stave.notes.push(note)
