@@ -81,24 +81,30 @@ Renderer.prototype.draw_stave = function(x, y, width, in_stave, options) {
 
 Renderer.prototype.draw_score = function(score) {
   var measures_per_line = Math.floor(this.ctx.paper.width / score.measure_width)
-  this.draw_stave(0, 0, score.measure_width, score.staves[0],
-    {"clef":score.clef, "signature":score.signature})
-  for(var k = 1; k < score.staves.length - 1; k++) {
-    var x = score.measure_width * (k % measures_per_line)
-    var y = score.measure_height * Math.floor(k / measures_per_line)
-    if(k % measures_per_line == 0) {
-      this.draw_stave(x, y, score.measure_width, score.staves[k], {"clef":score.clef})
-    } else {
-      this.draw_stave(x, y, score.measure_width, score.staves[k])
-    }
-  }
+  for(var k = 0; k < score.staves.length; k++) {
+    var i = k % measures_per_line
+    var j = Math.floor(k / measures_per_line)
+    var x = score.measure_width * i
+    var y = score.measure_height * j
 
-  if(score.staves.length > 1) {
-    var k = score.staves.length - 1
-    var x = score.measure_width * (k % measures_per_line)
-    var y = score.measure_height * Math.floor(k / measures_per_line)
-    this.draw_stave(x, y, score.measure_width, score.staves[k],
-      {"end_bar":Vex.Flow.Barline.type.END})
+    var config = {}
+
+    // The first measure of each line should have the clef
+    if(i == 0) {
+      config.clef = score.clef
+    }
+
+    // The first measure of the score should have the time signature
+    if(k == 0) {
+      config.signature = score.signature
+    }
+
+    // the last measure should have an appropriate barline
+    if(k == score.staves.length - 1) {
+      config.end_bar = Vex.Flow.Barline.type.END
+    }
+
+    this.draw_stave(x, y, score.measure_width, score.staves[k], config)
   }
 }
 
