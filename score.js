@@ -106,15 +106,6 @@ function make_note(name) {
   return new Vex.Flow.StaveNote({ keys: ["c/5"], duration: name})
 }
 
-function make_notes(str) {
-  var notes = new Array()
-  var str_notes = str.split(" ")
-  for(var i = 0; i < str_notes.length; i++) {
-    notes.push(this.make_note(str_notes[i]))
-  }
-  return notes
-}
-
 function make_beam(notes) {
   return new Vex.Flow.Beam(notes)
 }
