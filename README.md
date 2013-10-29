@@ -15,6 +15,7 @@ Score has a rudimentary language for specifying notes. An example of how a
 measure is specified helps illustrate the language. A score can be specified by
 writing,
 
+```
 <html>
   <body>
     <svg id="score" />
@@ -23,6 +24,7 @@ writing,
     var score = new Score('score', '4 4 4 4 | (8 8) 8 4 8r 4')
   </script>
 </html>
+```
 
 This example show a piece that contains 2 measures. The first measure is just a
 set of 4 quarter notes. The vertical bar is the separator between the measures.
