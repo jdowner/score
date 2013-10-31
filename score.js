@@ -47,6 +47,7 @@ Renderer.prototype.draw_stave = function(x, y, width, in_stave, options) {
     stave.addTimeSignature(signature)
   }
 
+  // A an end bar if there is one
   if(end_bar) {
     stave.setEndBarType(end_bar)
   }
@@ -70,7 +71,7 @@ Renderer.prototype.draw_stave = function(x, y, width, in_stave, options) {
   formatter.format([voice], width)
   formatter.formatToStave([voice], stave)
 
-  // Draw the voice
+  // Draw the voice using the stave
   voice.draw(this.ctx, stave);
 
   // Draw any beams
@@ -133,7 +134,7 @@ var Stave = function(notes) {
     return str.split(' ')
   }
 
-  // Starts an new beam array and pushed it onto the stack
+  // Starts a new beam array and pushed it onto the stack
   var start_beam = function() {
     beam_stack.push(new Array())
   }
