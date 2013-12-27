@@ -1,15 +1,16 @@
 Score
 =====
 
-A simple javascript renderer for creating drum tabulature.
+A simple javascript renderer for creating music notation for drums.
 
 
 Introduction
 --------------------------------------------------
 
-Score is an SVG renderer for creating drum tabulature using the VexFlow library.
-The goal of Score is to provide a simple way of specifying single-note scores
-for the purpose of practicing timing and improving a musicians inner clock.
+Score is an SVG renderer for creating notation for drums using the VexFlow
+library. The goal of Score is to provide a simple way of specifying single-note
+scores for the purpose of practicing timing and improving a musicians inner
+clock.
 
 Score has a rudimentary language for specifying notes. An example of how a
 measure is written helps illustrate the language,
