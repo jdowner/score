@@ -18,8 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-var Renderer = function(id) {
-  canvas = document.getElementById(id)
+var Renderer = function(canvas) {
   this.renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.RAPHAEL)
   this.ctx = this.renderer.getContext()
 }
@@ -182,12 +181,12 @@ Stave.prototype.notes = function() {
   return this.notes
 }
 
-var Score = function(id, notes) {
+var Score = function(canvas, notes) {
   this.clef = "percussion"
   this.signature = "4/4"
   this.measure_height = 100
   this.measure_width = 300
-  this.renderer = new Renderer(id)
+  this.renderer = new Renderer(canvas)
 
   this.staves = new Array()
   var measures = notes.split("|")
