@@ -206,4 +206,27 @@ Score.prototype.signature = function() {
 Score.prototype.draw = function() {
   this.renderer.clear()
   this.renderer.draw_score(this)
+
+  // The following code determines the bounding box around all of the rects and
+  // paths in the SVG element created by Raphael and ensures that the size of
+  // the SVG element is sufficient to render the entire score.
+  var canvas = $(this.renderer.ctx.paper.canvas)
+  var bbox = {'x':0, 'y':0, 'u':0, 'v':0}
+  $.each(canvas.find('rect, path'), function(index, element){
+    var child = $(element)
+    var x = parseFloat(child.attr('x'))
+    var y = parseFloat(child.attr('y'))
+    var w = parseFloat(child.attr('width'))
+    var h = parseFloat(child.attr('height'))
+
+    bbox.x = Math.min(bbox.x, x) || bbox.x
+    bbox.y = Math.min(bbox.y, y) || bbox.y
+    bbox.u = Math.max(bbox.u, x + w) || bbox.u
+    bbox.v = Math.max(bbox.v, y + h) || bbox.v
+  })
+
+  canvas.attr('x', bbox.x)
+  canvas.attr('y', bbox.y)
+  canvas.attr('width', bbox.u - bbox.x)
+  canvas.attr('height', bbox.v - bbox.y)
 }
