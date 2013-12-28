@@ -210,10 +210,10 @@ Score.prototype.draw = function() {
   // The following code determines the bounding box around all of the rects and
   // paths in the SVG element created by Raphael and ensures that the size of
   // the SVG element is sufficient to render the entire score.
-  var canvas = $(this.renderer.ctx.paper.canvas)
+  var canvas = jQuery(this.renderer.ctx.paper.canvas)
   var bbox = {'x':0, 'y':0, 'u':0, 'v':0}
-  $.each(canvas.find('rect, path'), function(index, element){
-    var child = $(element)
+  jQuery.each(canvas.find('rect, path'), function(index, element){
+    var child = jQuery(element)
     var x = parseFloat(child.attr('x'))
     var y = parseFloat(child.attr('y'))
     var w = parseFloat(child.attr('width'))
