@@ -37,13 +37,13 @@
     var canvas = document.getElementById("canvas")
     var score = new Score(canvas, notes)
 
-    // Create initialization function to update and shuffle the score
+    // Create initialization function to render and shuffle the score
     function init() {
-      score.update()
+      score.draw()
 
       canvas.addEventListener('click', function(e) {
         score.shuffle()
-        score.update()
+        score.draw()
       })
     }
 

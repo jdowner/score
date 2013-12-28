@@ -203,7 +203,7 @@ Score.prototype.signature = function() {
   return this.signature
 }
 
-Score.prototype.update = function() {
+Score.prototype.draw = function() {
   this.renderer.clear()
   this.renderer.draw_score(this)
 }
