@@ -4,23 +4,12 @@
     <meta charset="UTF-8" />
     <title>score-example</title>
   </head>
+  <script src="jquery-2.0.3.min.js"></script>
   <script src="raphael-v2.1.2-min.js"></script>
   <script src="vexflow-min.js"></script>
-  <style type="text/css">
-    svg {
-      overflow: visible;
-      height: 1200px;
-      width: 100%;
-    }
-
-    body {
-      height: 100%;
-      width: 100%;
-    }
-  </style>
   <script src="score.js"></script>
   <body>
-    <svg id="score" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="canvas"></div>
   </body>
   <script>
     // Define the notes
@@ -46,15 +35,16 @@
     }
 
     // Create a score object in the "score" element
-    var score = new Score("score", notes)
+    var canvas = document.getElementById("canvas")
+    var score = new Score(canvas, notes)
 
-    // Create initialization function to update and shuffle the score
+    // Create initialization function to render and shuffle the score
     function init() {
-      score.update()
+      score.draw()
 
-      document.getElementById("score").addEventListener('click', function(e) {
+      canvas.addEventListener('click', function(e) {
         score.shuffle()
-        score.update()
+        score.draw()
       })
     }
 
