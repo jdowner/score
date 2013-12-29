@@ -7,10 +7,10 @@ A simple javascript renderer for creating music notation for drums.
 Introduction
 --------------------------------------------------
 
-Score is an SVG renderer for creating notation for drums using the VexFlow
-library. The goal of Score is to provide a simple way of specifying single-note
-scores for the purpose of practicing timing and improving a musicians inner
-clock.
+Score is an SVG renderer for creating notation for drums using the VexFlow and
+Raphael libraries. The goal of Score is to provide a simple way of specifying
+single-note scores for the purpose of practicing timing and improving a
+musicians inner clock.
 
 Score has a rudimentary language for specifying notes. An example of how a
 measure is written helps illustrate the language,
@@ -18,11 +18,12 @@ measure is written helps illustrate the language,
 ```
 <html>
   <body>
-    <svg id="score" />
+    <div id="score" />
   </body>
   <script src="score.js"></script>
   <script>
-    var score = new Score('score', '4 4 4 4 | (8 8) 8 4 8r 4')
+    var container = document.getElementById('score')
+    var score = new Score(container, '4 4 4 4 | (8 8) 8 4 8r 4')
   </script>
 </html>
 ```
