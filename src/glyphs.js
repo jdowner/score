@@ -193,5 +193,126 @@ var score = {
         w: 475,
         h: 674}
     },
+  },
+}
+
+function EighthNoteGlyph(){
+  this.name = "eighth-note"
+  this.svg = new SvgGroup()
+
+  var w = score.raw['vb'].bbox.w
+  var h = score.raw['vb'].bbox.h
+
+  {
+    // the blob
+    var group = new SvgGroup()
+    var glyph = score.raw['vb']
+    var blob = new SvgPath(glyph.path)
+    group.add(blob)
+    group.translate(0, 3 * h - glyph.bbox.y + 30)
+    this.svg.add(group)
+  }
+
+  {
+    // the flag
+    var group = new SvgGroup()
+    var glyph = score.raw['v54']
+    var flag = new SvgPath(glyph.path)
+    group.add(flag)
+    group.translate(w - glyph.bbox.x,-glyph.bbox.y)
+    this.svg.add(group)
+  }
+
+  {
+    // the stem is supposed to be 3.5 times the space between lines. The
+    // height of the blob is equal to the space between the lines.
+    var stem = new SvgRect(w - 32, 0, 32, 7 * h / 2)
+    this.svg.add(stem)
+  }
+
+  this.bbox = {
+    x: 0,
+    y: 0,
+    w: 769,
+    h: 1522
+  }
+}
+
+function SixteenthNoteGlyph(){
+  this.name = "sixteenth-note"
+  this.svg = new SvgGroup()
+
+  var w = score.raw['vb'].bbox.w
+  var h = score.raw['vb'].bbox.h
+
+  {
+    // the blob
+    var group = new SvgGroup()
+    var glyph = score.raw['vb']
+    var blob = new SvgPath(glyph.path)
+    group.add(blob)
+    group.translate(0, 3 * h - glyph.bbox.y + 30)
+    this.svg.add(group)
+  }
+
+  {
+    // the flag
+    var group = new SvgGroup()
+    var glyph = score.raw['v3f']
+    var flag = new SvgPath(glyph.path)
+    group.add(flag)
+    group.translate(w - glyph.bbox.x,-glyph.bbox.y)
+    this.svg.add(group)
+  }
+
+  {
+    // the stem is supposed to be 3.5 times the space between lines. The
+    // height of the blob is equal to the space between the lines.
+    var stem = new SvgRect(w - 32, 0, 32, 7 * h / 2)
+    this.svg.add(stem)
+  }
+
+  this.bbox = {
+    x: 0,
+    y: 0,
+    w: 769,
+    h: 1522
+  }
+
+  this.svg.attrs({
+    onmouseover: "this.setAttributeNS(null,'fill','#606060')",
+    onmouseout: "this.setAttributeNS(null,'fill','black')"
+  })
+}
+
+function QuarterNoteGlyph(){
+  this.name = "quarter-note"
+  this.svg = new SvgGroup()
+
+  var w = score.raw['vb'].bbox.w
+  var h = score.raw['vb'].bbox.h
+
+  {
+    // the blob
+    var group = new SvgGroup()
+    var glyph = score.raw['vb']
+    var blob = new SvgPath(glyph.path)
+    group.add(blob)
+    group.translate(0, 3 * h - glyph.bbox.y + 30)
+    this.svg.add(group)
+  }
+
+  {
+    // the stem is supposed to be 3.5 times the space between lines. The
+    // height of the blob is equal to the space between the lines.
+    var stem = new SvgRect(w - 32, 0, 32, 7 * h / 2)
+    this.svg.add(stem)
+  }
+
+  this.bbox = {
+    x: 0,
+    y: 0,
+    w: w,
+    h: 1522
   }
 }
