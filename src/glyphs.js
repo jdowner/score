@@ -316,3 +316,99 @@ function QuarterNoteGlyph(){
     h: 1522
   }
 }
+
+function MeasureGlyph(w){
+  this.name = "measure"
+  this.svg = new SvgGroup()
+
+  var h = score.raw['vb'].bbox.h
+  var t = 32
+
+  this.bbox = {
+    x: 0,
+    y: 0,
+    w: w,
+    h: 4 * h
+  }
+
+  // draw the horizontal lines
+  this.svg.add(new SvgRect(0, (h - t) / 2, w, t))
+  this.svg.add(new SvgRect(0, (3 * h - t) / 2, w, t))
+  this.svg.add(new SvgRect(0, (5 * h - t) / 2, w, t))
+  this.svg.add(new SvgRect(0, (7 * h - t) / 2, w, t))
+  this.svg.add(new SvgRect(0, (9 * h - t) / 2, w, t))
+
+  // draw the vertical lines
+  this.svg.add(new SvgRect(0, h / 2, t, 4 * h))
+  this.svg.add(new SvgRect(w - t, h / 2, t, 4 * h))
+}
+
+function TabGlyph(){
+  this.name = "tab"
+  this.svg = new SvgGroup()
+
+  var glyph = score.raw['v59']
+  var group = new SvgGroup()
+
+  group.add(new SvgPath(glyph.path))
+
+  this.svg.add(group)
+
+  this.bbox = {
+    x: 0,
+    y: 0,
+    w: glyph.bbox.w,
+    h: glyph.bbox.h
+  }
+}
+
+function DigitGlyph(digit){
+  this.name = 'digit'
+  this.svg = new SvgGroup()
+
+  var digit_key = 'v' + digit.toString()
+  var digit_data = score.raw[digit_key]
+  var digit_glyph = new SvgPath(digit_data.path)
+
+  var group = new SvgGroup()
+  group.add(digit_glyph)
+  group.translate(-digit_data.bbox.x, -digit_data.bbox.y)
+
+  this.svg.add(group)
+
+  this.bbox = {
+    x: 0,
+    y: 0,
+    w: digit_data.bbox.w,
+    h: digit_data.bbox.h
+  }
+}
+
+function TimeSignatureGlyph(numer, denom){
+  this.name = 'time-signature'
+  this.svg = new SvgGroup()
+
+  var nglyph = new DigitGlyph(numer)
+  var dglyph = new DigitGlyph(denom)
+
+  var ngroup = new SvgGroup()
+  var dgroup = new SvgGroup()
+
+  ngroup.add(nglyph.svg)
+  dgroup.add(dglyph.svg)
+
+  // shift the groups so that the glyphs are centered
+  var center = Math.max(nglyph.bbox.w, dglyph.bbox.w) / 2
+  ngroup.translate(center - nglyph.bbox.w / 2, 0)
+  dgroup.translate(center - dglyph.bbox.w / 2, nglyph.bbox.h)
+
+  this.svg.add(ngroup)
+  this.svg.add(dgroup)
+
+  this.bbox = {
+    x: 0,
+    y: 0,
+    w: Math.max(nglyph.bbox.w, dglyph.bbox.w),
+    h: nglyph.bbox.h + dglyph.bbox.h,
+  }
+}
