@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/qunit-1.14.0.css">
   <script src="src/svg.js"></script>
   <script src="libs/qunit-1.14.0.js"></script>
+  <script src="libs/jquery-2.0.3.min.js"></script>
   <body>
     <div id="qunit"></div>
     <div id="qunit-fixture"></div>
@@ -123,6 +124,36 @@
         var obj = objects[name];
         obj.scale(30);
         equal(obj.get('transform'), 'scale(30)');
+      }
+    });
+
+    test("element interaction", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      // test the onclick callback
+      for(var key in objects){
+        var obj = objects[key];
+        var triggered = false;
+
+        obj.onclick(function(){triggered=true;});
+        $(obj.element).trigger('onclick');
+        ok(triggered);
+      }
+
+      // test the onmouseover callback
+      for(var key in objects){
+        var obj = objects[key];
+        var triggered = false;
+
+        obj.onmouseover(function(){triggered=true;});
+        $(obj.element).trigger('onmouseover');
+        ok(triggered);
       }
     });
   </script>

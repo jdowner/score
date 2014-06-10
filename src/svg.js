@@ -101,6 +101,24 @@ svg.element = function(){
 svg.element.extends(svg.node);
 
 /**
+ * Sets the 'click' callback
+ *
+ * @param cb - a callback function
+ */
+svg.element.prototype.onclick = function(cb){
+  this.element.onclick = cb;
+}
+
+/**
+ * Sets the 'mouse over' callback
+ *
+ * @param cb - a callback function
+ */
+svg.element.prototype.onmouseover = function(cb){
+  this.element.onmouseover = cb;
+}
+
+/**
  * Translates this element.
  *
  * @param dx - the amount to move in the x co-ordinate
