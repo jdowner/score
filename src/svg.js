@@ -90,6 +90,45 @@ svg.node.prototype.children = function(){
 }
 
 /*******************************************************************************
+ * The definition class represents a <defs> element in the SVG.
+ *
+ * If the provided <svg> element does not contain any <defs> elements, a new one
+ * is created. Otherwise, the first <defs> element is associated with this
+ * object.
+ *
+ * @param root - an <svg> element.
+ */
+svg.definition = function(root){
+  this.root = root;
+
+  var defs = root.element.getElementsByTagName("defs");
+  if(defs.length > 0){
+    this.element = defs[0];
+  } else {
+    this.element = document.createElementNS(svg.ns, "defs");
+    this.root.element.appendChild(this.element);
+  }
+}
+
+svg.definition.extends(svg.node);
+
+/**
+ * Returns a new instance of the definition.
+ *
+ * @param x - the x attribute of the new element.
+ * @param y - the y attribute of the new element.
+ *
+ * @return the new instance of the definition.
+ */
+svg.definition.prototype.create = function(id, x, y){
+  var obj = document.createElementNS(svg.ns, "use");
+  obj.setAttributeNS(null, "x", x);
+  obj.setAttributeNS(null, "y", y);
+  obj.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", id);
+  return new svg.proxy(obj);
+}
+
+/*******************************************************************************
  * The element class defines an interface that is common to all of the SVG
  * classes.
  */
