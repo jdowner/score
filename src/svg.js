@@ -132,9 +132,9 @@ svg.definition.prototype.create = function(id, x, y){
  * The element class defines an interface that is common to all of the SVG
  * classes.
  */
-svg.element = function(){
-  this.root = null;
-  this.element = null;
+svg.element = function(element, root){
+  this.root = root || null;
+  this.element = element;
 }
 
 svg.element.extends(svg.node);
