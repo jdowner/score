@@ -156,5 +156,18 @@
         ok(triggered);
       }
     });
+
+    test("svg.path constructions", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+      var path = new svg.path(root);
+
+      equal(path.get("d"), "");
+
+      path.move_to(10, 12);
+      path.line_to(20, 23);
+      path.close();
+
+      equal(path.get("d"), "M 10 12 L 20 23 z");
+    })
   </script>
 </html>
