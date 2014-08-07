@@ -283,3 +283,11 @@ svg.path.prototype.move_to = function(x, y){
 svg.path.prototype.line_to = function(x, y){
   this.attr('d', this.get('d') + ' L ' + x.toString() + ' ' + y.toString());
 }
+
+/**
+ * Close the path.
+ *
+ */
+svg.path.prototype.close = function(){
+  this.attr('d', this.get('d') + ' z');
+}
