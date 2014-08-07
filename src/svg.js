@@ -265,13 +265,27 @@ svg.path = function(root, path){
 svg.path.extends(svg.element);
 
 /**
+ * Append text to the path attribute.
+ *
+ * @param text - the text that is appended
+ */
+svg.path.prototype.append_to_path = function(text){
+  var current = this.get('d');
+  if(current == ""){
+    this.attr('d', text);
+  } else {
+    this.attr('d', current + ' ' + text);
+  }
+}
+
+/**
  * Appends a move instruction to the path.
  *
  * @param x - the x absolute position to move to
  * @param y - the y absolute position to move to
  */
 svg.path.prototype.move_to = function(x, y){
-  this.attr('d', this.get('d') + ' M ' + x.toString() + ' ' + y.toString());
+  this.append_to_path('M ' + x.toString() + ' ' + y.toString());
 }
 
 /**
@@ -281,7 +295,7 @@ svg.path.prototype.move_to = function(x, y){
  * @param y - the y absolute position to draw to
  */
 svg.path.prototype.line_to = function(x, y){
-  this.attr('d', this.get('d') + ' L ' + x.toString() + ' ' + y.toString());
+  this.append_to_path('L ' + x.toString() + ' ' + y.toString());
 }
 
 /**
@@ -289,5 +303,5 @@ svg.path.prototype.line_to = function(x, y){
  *
  */
 svg.path.prototype.close = function(){
-  this.attr('d', this.get('d') + ' z');
+  this.append_to_path('z');
 }
