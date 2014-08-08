@@ -6,6 +6,7 @@
   </head>
   <link rel="stylesheet" href="css/qunit-1.14.0.css">
   <script src="src/svg.js"></script>
+  <script src="src/parser.js"></script>
   <script src="libs/qunit-1.14.0.js"></script>
   <script src="libs/jquery-2.0.3.min.js"></script>
   <body>
@@ -168,6 +169,20 @@
       path.close();
 
       equal(path.get("d"), "M 10 12 L 20 23 z");
+    })
+
+    test("svg.parser valid symbol", function(){
+      ok(score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4s|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+    })
+
+    test("svg.parser beam mismatch", function(){
+      ok(!score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4r|8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4r|8n 8n 8n 8n 2r)| (4n 4n (8n 8n) 4n'));
+      ok(!score.is_valid_score( '4n 4r|((8n 8n 8n 8n 2r)| (4n 4n (8n 8n) 4n))'));
+
+      ok(score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
     })
   </script>
 </html>
