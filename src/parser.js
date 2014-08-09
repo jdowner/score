@@ -34,9 +34,28 @@ var score = {
       '|': true,
     },
 
+    notes: {
+      '1n': true,
+      '2n': true,
+      '4n': true,
+      '8n': true,
+      '16n': true,
+      '32n': true,
+      '1r': true,
+      '2r': true,
+      '4r': true,
+      '8r': true,
+      '16r': true,
+      '32r': true,
+    },
+
     is_symbol: function(sym){
       return score.notation.symbols.hasOwnProperty(sym);
     },
+
+    is_note: function(sym){
+      return score.notation.notes.hasOwnProperty(sym);
+    }
   },
 
   is_valid_score: function(notes){
