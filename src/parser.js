@@ -97,4 +97,74 @@ var score = {
 
     return true;
   },
+
+  measure: function(parent){
+    this.parent = parent;
+    this.children = [];
+  },
+
+  beam: function(parent){
+    this.parent = parent;
+    this.children = [];
+  },
+
+  note: function(name){
+    this.name = name;
+  },
+
+  parse: function(notes){
+    // add padding
+    notes = notes.replace(/\|/g, ' | ');
+    notes = notes.replace(/\(/g, ' ( ');
+    notes = notes.replace(/\)/g, ' ) ');
+    notes = notes.replace(/ [ ]+/g, ' ');
+
+    // now split into a list of symbols
+    var symbols = notes.split(' ');
+
+    // create an array to contain all of the measures
+    var measures = [];
+    var current = measures;
+    for(var i = 0; i < symbols.length; i++){
+      var s = symbols[i];
+
+      // A bar indicates the transition from one measure to the next. Set
+      // current to the measures array and the next symbol will trigger the
+      // creation of a new measure.
+      if(s == score.notation.bar){
+        current = measures;
+        continue;
+      }
+
+      // If current points to the measures array, we need to create a new
+      // measure and append it before parsing the symbol.
+      if(current === measures){
+        var measure = new score.measure(current);
+        current.push(measure);
+        current = measure;
+      }
+
+      // Add the note to current
+      if(score.notation.is_note(s)){
+        current.children.push(new score.note(s));
+        continue;
+      }
+
+      // If the symbol is a beam beginning, create the beam and make it current.
+      if (s == score.notation.beam_begin){
+        var beam = new score.beam(current);
+        current.children.push(beam);
+        current = beam;
+        continue;
+      }
+
+      // If the symbol is a beam end, set current to the beams parent.
+      if(s == score.notation.beam_end){
+        current = current.parent;
+        continue;
+      }
+    }
+
+    return measures;
+  },
 }
