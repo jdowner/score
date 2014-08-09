@@ -6,6 +6,7 @@
   </head>
   <link rel="stylesheet" href="css/qunit-1.14.0.css">
   <script src="src/svg.js"></script>
+  <script src="src/parser.js"></script>
   <script src="libs/qunit-1.14.0.js"></script>
   <script src="libs/jquery-2.0.3.min.js"></script>
   <body>
@@ -168,6 +169,49 @@
       path.close();
 
       equal(path.get("d"), "M 10 12 L 20 23 z");
+    })
+
+    test("svg.parser valid symbol", function(){
+      ok(score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4s|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+    })
+
+    test("svg.parser beam mismatch", function(){
+      ok(!score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4r|8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4r|8n 8n 8n 8n 2r)| (4n 4n (8n 8n) 4n'));
+      ok(!score.is_valid_score( '4n 4r|((8n 8n 8n 8n 2r)| (4n 4n (8n 8n) 4n))'));
+
+      ok(score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+    })
+
+    test("svg.parser AST creation", function(){
+      var content = '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n';
+      measures = score.parse(content);
+
+      equal(measures.length, 3);
+
+      equal(measures[0].children.length, 2);
+      equal(measures[1].children.length, 1);
+      equal(measures[2].children.length, 2);
+
+      equal(measures[0].children[0].name, '4n');
+      equal(measures[0].children[1].name, '4r');
+
+      equal(measures[1].children[0].children.length, 5);
+      equal(measures[1].children[0].children[0].name, '8n');
+      equal(measures[1].children[0].children[1].name, '8n');
+      equal(measures[1].children[0].children[2].name, '8n');
+      equal(measures[1].children[0].children[3].name, '8n');
+      equal(measures[1].children[0].children[4].name, '2r');
+
+      equal(measures[2].children[0].children.length, 3);
+      equal(measures[2].children[0].children[0].name, '4n');
+      equal(measures[2].children[0].children[1].name, '4n');
+      equal(measures[2].children[0].children[2].children.length, 2);
+      equal(measures[2].children[0].children[2].children[0].name, '8n');
+      equal(measures[2].children[0].children[2].children[1].name, '8n');
+      equal(measures[2].children[1].name, '4n');
     })
   </script>
 </html>
