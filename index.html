@@ -7,6 +7,7 @@
   <script src="libs/jquery-2.0.3.min.js"></script>
   <script src="libs/raphael-v2.1.2-min.js"></script>
   <script src="libs/vexflow-min.js"></script>
+  <script src="src/parser.js"></script>
   <script src="src/score.js"></script>
   <body>
     <div id="canvas"></div>
@@ -14,15 +15,15 @@
   <script>
     // Define the notes
     var notes = ""
-    notes = notes + "4 4 4 4 | 8r 8 4 8r 4 8r | 4r 4 4 4r | 8r 4 8 8r 8 4r"
-    notes = notes + " | 8r 8 4 4 4r | 4r 4r 4 8r 8 | 4 8r 8 8r 8 4r | 4r 4 4r 4"
-    notes = notes + " | 4r (8 8) (8 8) 4r | 4 4r 4r 4 | 8r 8 8r 8 4 4r | 4 4 4r 8r 8"
-    notes = notes + " | 4r 8r 8 8r 8 4r | 4 4r 4 4r | (8 8 8 8) 4r 4r | 4 8r 8 4r 8r 8"
-    notes = notes + " | 8r 8 4 8r 8 (8 8) | 4r (8 8) 4r (8 8) | 4 8r 8 8r 8 4 | 4r 4 4r (8 8)"
-    notes = notes + " | (8 8) 4r 4r (8 8) | 4r (8 8) 8r 8 4r | 4r 4 4r 8r 8 | 4 4 4r 4"
-    notes = notes + " | 8r 8 4 4r (8 8) | 4r 4r 4r 4 | 4r (8 8) 4r 8r 8 | 8r 8 4 (8 8) 4r"
-    notes = notes + " | 4r 4r (8 8 8 8) | 8r 8 4 4 4r | 4r (8 8) 4r 8 8r | 4 4r 8r 8 (8 8)"
-    notes = notes + " | 4r 4 4r 8 8r | (8 8 8 8) 4r 4r | 4 8r 8 4r 4 | (8 8 8 8) (8 8 8 16 16)"
+    notes = notes + "4n 4n 4n 4n | 8r 8n 4n 8r 4n 8r | 4r 4n 4n 4r | 8r 4n 8n 8r 8n 4r"
+    notes = notes + " | 8r 8n 4n 4n 4r | 4r 4r 4n 8r 8n | 4n 8r 8n 8r 8n 4r | 4r 4n 4r 4n"
+    notes = notes + " | 4r (8n 8n) (8n 8n) 4r | 4n 4r 4r 4n | 8r 8n 8r 8n 4n 4r | 4n 4n 4r 8r 8n"
+    notes = notes + " | 4r 8r 8n 8r 8n 4r | 4n 4r 4n 4r | (8n 8n 8n 8n) 4r 4r | 4n 8r 8n 4r 8r 8n"
+    notes = notes + " | 8r 8n 4n 8r 8n (8n 8n) | 4r (8n 8n) 4r (8n 8n) | 4n 8r 8n 8r 8n 4n | 4r 4n 4r (8n 8n)"
+    notes = notes + " | (8n 8n) 4r 4r (8n 8n) | 4r (8n 8n) 8r 8n 4r | 4r 4n 4r 8r 8n | 4n 4n 4r 4n"
+    notes = notes + " | 8r 8n 4n 4r (8n 8n) | 4r 4r 4r 4n | 4r (8n 8n) 4r 8r 8n | 8r 8n 4n (8n 8n) 4r"
+    notes = notes + " | 4r 4r (8n 8n 8n 8n) | 8r 8n 4n 4n 4r | 4r (8n 8n) 4r 8n 8r | 4n 4r 8r 8n (8n 8n)"
+    notes = notes + " | 4r 4n 4r 8n 8r | (8n 8n 8n 8n) 4r 4r | 4n 8r 8n 4r 4n | (8n 8n 8n 8n) (8n 8n 8n 16n 16n)"
 
     // Extend the score to support shuffling
     Score.prototype.shuffle = function() {
