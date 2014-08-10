@@ -41,7 +41,7 @@ note.
 
 In short, the language consists of
 
-* notes <x>n, where x is 4, 8, or 16
-* rests <x>r, where x is 4, 8, or 16
+* notes [x]n, where x is 4, 8, or 16
+* rests [x]r, where x is 4, 8, or 16
 * beams (...), parentheses containing notes
 * bars |, used to separate measures
