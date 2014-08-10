@@ -23,7 +23,7 @@ measure is written helps illustrate the language,
   <script src="score.js"></script>
   <script>
     var container = document.getElementById('score')
-    var score = new Score(container, '4 4 4 4 | (8 8) 8 4 8r 4')
+    var score = new Score(container, '4n 4n 4n 4n | (8n 8n) 8n 4n 8r 4n')
   </script>
 </html>
 ```
@@ -39,6 +39,9 @@ either be normal notes or rest notes. The final eighth note in the second
 measure has an 'r' following it, which is used to indicate that it is a rest
 note.
 
-In short, the language consists of a number representing the duration of the
-notes, and symbols for specifying rests ('r'), groups ('()'), and bars ('|').
+In short, the language consists of
 
+* notes <x>n, where x is 4, 8, or 16
+* rests <x>r, where x is 4, 8, or 16
+* beams (...), parentheses containing notes
+* bars |, used to separate measures
