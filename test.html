@@ -183,6 +183,17 @@
       ok(!score.is_valid_score( '4n 4r|((8n 8n 8n 8n 2r)| (4n 4n (8n 8n) 4n))'));
 
       ok(score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+      ok(score.is_valid_score('4n 4r 4n 4r'));
+    })
+
+    test("svg.parser single measure", function(){
+      measures = score.parse('4n 4r 4n 4r');
+
+      equal(measures.length, 1);
+      equal(measures[0].children[0].name, '4n');
+      equal(measures[0].children[1].name, '4r');
+      equal(measures[0].children[2].name, '4n');
+      equal(measures[0].children[3].name, '4r');
     })
 
     test("svg.parser AST creation", function(){
@@ -212,6 +223,38 @@
       equal(measures[2].children[0].children[2].children[0].name, '8n');
       equal(measures[2].children[0].children[2].children[1].name, '8n');
       equal(measures[2].children[1].name, '4n');
+    })
+
+    test("svg.parser traversal", function(){
+      var original = '4n 4r | (8n 8n 8n 8n 2r) | (4n 4n (8n 8n)) 4n';
+      var measures = score.parse(original);
+
+      var content = '';
+
+      var traversal = new score.traversal();
+      traversal.on_beam_begin = function(){
+        content = content + ' ( ';
+      }
+
+      traversal.on_beam_end = function(){
+        content = content + ' ) ';
+      }
+
+      traversal.on_bar = function(){
+        content = content + ' | ';
+      }
+
+      traversal.on_note = function(note){
+        content = content + ' ' + note + ' ';
+      }
+
+      traversal.foreach(measures);
+      content = content.trim();
+      content = content.replace(/\s\s+/g, ' ');
+      content = content.replace(/\(\s/g, '(');
+      content = content.replace(/\s\)/g, ')');
+
+      equal(content, original);
     })
   </script>
 </html>

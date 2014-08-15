@@ -167,4 +167,45 @@ var score = {
 
     return measures;
   },
+
+  traversal: function(){
+    var self = this;
+
+    // Creates placeholder handlers
+    this.on_beam_begin = function(){};
+    this.on_beam_end = function(){};
+    this.on_note = function(name){};
+    this.on_bar = function(){};
+
+    // The next function is used to iterate to the next note in the tree.
+    this.foreach = function(measures){
+      var recurse = function(node){
+        if(!node.hasOwnProperty('children')){
+          self.on_note(node.name);
+          return;
+        }
+
+        self.on_beam_begin();
+
+        for(var i = 0; i < node.children.length; i++){
+          recurse(node.children[i]);
+        }
+
+        self.on_beam_end();
+      }
+
+      var measure_iterator = function(measure){
+        for(var i = 0; i < measure.children.length; i++){
+          recurse(measure.children[i]);
+        }
+      }
+
+      measure_iterator(measures[0]);
+
+      for(var i = 1; i < measures.length; i++){
+        self.on_bar();
+        measure_iterator(measures[i]);
+      }
+    }
+  },
 }

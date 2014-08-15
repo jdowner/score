@@ -120,27 +120,16 @@ var Stave = function(notes) {
   // following private functions.
   var stave = this
 
-  // Poor-man's tokenizer
-  var tokenize = function(str) {
-    str = str.trim()
-    str = str.replace(/8r/g, 'x')
-    str = str.replace(/4r/g, 'X')
-    str = str.replace(/\(/g, '( ')
-    str = str.replace(/\)/g, ' )')
-    str = str.replace(/  /g, ' ')
-    str = str.replace(/x/g, '8r')
-    str = str.replace(/X/g, '4r')
-    return str.split(' ')
-  }
+  var traverse = new score.traversal();
 
   // Starts a new beam array and pushed it onto the stack
-  var start_beam = function() {
+  traverse.on_beam_begin = function() {
     beam_stack.push(new Array())
   }
 
   // Pops the last beam off the stack and pushes the notes in the bream to the
   // stave.
-  var end_beam = function() {
+  traverse.on_beam_end = function() {
     var beam = beam_stack.pop()
     var notes = new Array()
     for(var j = 0; j < beam.length; j++) {
@@ -150,7 +139,8 @@ var Stave = function(notes) {
   }
 
   // Adds a new note to the current beam on the beam stack.
-  var add_note = function(token) {
+  traverse.on_note = function(name) {
+    var token = name.replace('n', '');
     var note = new Vex.Flow.StaveNote({ keys: ["c/5"], duration: token})
     stave.notes.push(note)
     for(var j = 0; j < beam_stack.length; j++) {
@@ -158,23 +148,7 @@ var Stave = function(notes) {
     }
   }
 
-  // Iterate through the tokens and construct the notes and beams
-  var token = null
-  var tokens = tokenize(notes)
-  for(var i = 0; i < tokens.length; i++) {
-    token = tokens[i]
-    switch (token)
-    {
-      case '(':
-        start_beam()
-        break
-      case ')':
-        end_beam()
-        break
-      default:
-        add_note(token)
-    }
-  }
+  traverse.foreach(score.parse(notes));
 }
 
 Stave.prototype.notes = function() {
