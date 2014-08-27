@@ -195,8 +195,12 @@ svg.element.prototype.scale = function(factor){
  * one.
  */
 svg.proxy = function(element){
-  this.root = new svg.root(element.ownerSVGElement);
+  svg.node.call(this);
+
   this.element = element;
+  if(element.ownerSVGElement !== null){
+    this.root = new svg.root(element.ownerSVGElement);
+  }
 }
 
 svg.proxy.extends(svg.node);
