@@ -276,11 +276,7 @@ svg.root.prototype.scale = function(factor){
  * for applying a transformation to a set of related elements.
  */
 svg.group = function(root){
-  if(root instanceof SVGSVGElement)
-    this.root = new svg.root(root);
-  else
-    this.root = root;
-  this.element = document.createElementNS(svg.ns, "g");
+  svg.element.call(this, root, document.createElementNS(svg.ns, "g"));
 }
 
 svg.group.extends(svg.element);
