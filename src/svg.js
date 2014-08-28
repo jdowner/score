@@ -295,8 +295,7 @@ svg.rect.extends(svg.element);
  * This class provides the interface to the 'path' element.
  */
 svg.path = function(root, path){
-  this.root = root;
-  this.element = document.createElementNS(svg.ns, "path");
+  svg.element.call(this, root, document.createElementNS(svg.ns, "path"));
   this.attr('d', path || '');
 }
 
