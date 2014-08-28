@@ -137,9 +137,51 @@ svg.definition.prototype.create = function(id, x, y){
 svg.element = function(root, element){
   this.root = root || null;
   this.element = element;
+
+  var self = this;
+
+  Object.defineProperty(self, "classes", {
+    /**
+     * Exposes the class attribute of the underlying element as a list.
+     */
+    get: function(){
+      var classes = self.element.getAttributeNS(null, "class");
+      if(classes !== null){
+        return classes.split(" ");
+      }
+      return [];
+    }
+  });
 }
 
 svg.element.extends(svg.node);
+
+/**
+ * Appends class type to the classes property
+ *
+ * The class type will be append to the list of classes in the SVG elements
+ * 'class' attribute if it not already in the list.
+ *
+ * @param cls - the name of the class type to append.
+ */
+svg.element.prototype.add_class = function(cls){
+  // If this is the first class, just set the attribute
+  if(this.classes.length == 0){
+    this.element.setAttributeNS(null, "class", cls);
+    return;
+  }
+
+  // Ensure the class is not already in the list
+  for(var i = 0; i < this.classes.length; i++){
+    if(cls == this.classes[i]){
+      return;
+    }
+  }
+
+  // Append the new class
+  this.element.setAttributeNS(null, "class",
+      this.element.getAttributeNS(null, "class") + " " + cls);
+}
 
 /**
  * Sets the 'click' callback
