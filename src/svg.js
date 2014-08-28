@@ -215,7 +215,7 @@ svg.root = function(element){
   if(!(element instanceof SVGSVGElement))
     throw "A root element must be of type SVGSVGElement";
 
-  this.element = element;
+  svg.proxy.call(this, element);
 }
 
 svg.root.extends(svg.proxy);
