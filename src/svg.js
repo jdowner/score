@@ -99,6 +99,8 @@ svg.node.prototype.children = function(){
  * @param root - an <svg> element.
  */
 svg.definition = function(root){
+  svg.node.call(this);
+
   this.root = root;
 
   var defs = root.element.getElementsByTagName("defs");
@@ -132,12 +134,54 @@ svg.definition.prototype.create = function(id, x, y){
  * The element class defines an interface that is common to all of the SVG
  * classes.
  */
-svg.element = function(element, root){
+svg.element = function(root, element){
   this.root = root || null;
   this.element = element;
+
+  var self = this;
+
+  Object.defineProperty(self, "classes", {
+    /**
+     * Exposes the class attribute of the underlying element as a list.
+     */
+    get: function(){
+      var classes = self.element.getAttributeNS(null, "class");
+      if(classes !== null){
+        return classes.split(" ");
+      }
+      return [];
+    }
+  });
 }
 
 svg.element.extends(svg.node);
+
+/**
+ * Appends class type to the classes property
+ *
+ * The class type will be append to the list of classes in the SVG elements
+ * 'class' attribute if it not already in the list.
+ *
+ * @param cls - the name of the class type to append.
+ */
+svg.element.prototype.add_class = function(cls){
+  // If this is the first class, just set the attribute
+  if(this.classes.length == 0){
+    this.element.setAttributeNS(null, "class", cls);
+    return;
+  }
+
+  // Ensure the class is not already in the list
+  for(var i = 0; i < this.classes.length; i++){
+    if(cls == this.classes[i]){
+      return;
+    }
+  }
+
+  // Append the new class
+  this.element.setAttributeNS(null, "class",
+      this.element.getAttributeNS(null, "class") + " " + cls);
+}
 
 /**
  * Sets the 'click' callback
@@ -195,8 +239,12 @@ svg.element.prototype.scale = function(factor){
  * one.
  */
 svg.proxy = function(element){
-  this.root = new svg.root(element.ownerSVGElement);
+  svg.node.call(this);
+
   this.element = element;
+  if(element.ownerSVGElement !== null){
+    this.root = new svg.root(element.ownerSVGElement);
+  }
 }
 
 svg.proxy.extends(svg.node);
@@ -211,7 +259,7 @@ svg.root = function(element){
   if(!(element instanceof SVGSVGElement))
     throw "A root element must be of type SVGSVGElement";
 
-  this.element = element;
+  svg.proxy.call(this, element);
 }
 
 svg.root.extends(svg.proxy);
@@ -272,11 +320,7 @@ svg.root.prototype.scale = function(factor){
  * for applying a transformation to a set of related elements.
  */
 svg.group = function(root){
-  if(root instanceof SVGSVGElement)
-    this.root = new svg.root(root);
-  else
-    this.root = root;
-  this.element = document.createElementNS(svg.ns, "g");
+  svg.element.call(this, root, document.createElementNS(svg.ns, "g"));
 }
 
 svg.group.extends(svg.element);
@@ -285,8 +329,7 @@ svg.group.extends(svg.element);
  * This class provides the interface to the 'rect' element.
  */
 svg.rect = function(root, x, y, w, h){
-  this.root = root;
-  this.element = document.createElementNS(svg.ns, "rect");
+  svg.element.call(this, root, document.createElementNS(svg.ns, "rect"));
   this.attrs({x: x, y: y, width: w, height: h});
 }
 
@@ -296,8 +339,7 @@ svg.rect.extends(svg.element);
  * This class provides the interface to the 'path' element.
  */
 svg.path = function(root, path){
-  this.root = root;
-  this.element = document.createElementNS(svg.ns, "path");
+  svg.element.call(this, root, document.createElementNS(svg.ns, "path"));
   this.attr('d', path || '');
 }
 

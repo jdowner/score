@@ -60,6 +60,29 @@
       }
     });
 
+    test("element classes property", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      for(var name in objects){
+        var obj = objects[name];
+        equal(obj.classes.length, 0);
+
+        obj.add_class('foo');
+        obj.add_class('foo');
+        obj.add_class('bar');
+
+        equal(obj.classes.length, 2);
+        equal(obj.classes[0], 'foo');
+        equal(obj.classes[1], 'bar');
+      }
+    })
+
     test("element add child", function(){
       var root = new svg.root(document.getElementById("test-root"));
 
