@@ -172,10 +172,8 @@ svg.element.prototype.add_class = function(cls){
   }
 
   // Ensure the class is not already in the list
-  for(var i = 0; i < this.classes.length; i++){
-    if(cls == this.classes[i]){
-      return;
-    }
+  if(-1 != this.classes.indexOf(cls)){
+    return;
   }
 
   // Append the new class
