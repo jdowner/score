@@ -285,8 +285,7 @@ svg.group.extends(svg.element);
  * This class provides the interface to the 'rect' element.
  */
 svg.rect = function(root, x, y, w, h){
-  this.root = root;
-  this.element = document.createElementNS(svg.ns, "rect");
+  svg.element.call(this, root, document.createElementNS(svg.ns, "rect"));
   this.attrs({x: x, y: y, width: w, height: h});
 }
 
