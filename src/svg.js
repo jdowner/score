@@ -99,6 +99,8 @@ svg.node.prototype.children = function(){
  * @param root - an <svg> element.
  */
 svg.definition = function(root){
+  svg.node.call(this);
+
   this.root = root;
 
   var defs = root.element.getElementsByTagName("defs");
