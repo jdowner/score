@@ -127,7 +127,7 @@ svg.definition.prototype.create = function(id, x, y){
   obj.setAttributeNS(null, "x", x);
   obj.setAttributeNS(null, "y", y);
   obj.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", id);
-  return new svg.element(obj);
+  return new svg.element(null, obj);
 }
 
 /*******************************************************************************
