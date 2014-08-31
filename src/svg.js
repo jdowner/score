@@ -146,12 +146,22 @@ svg.element = function(root, element){
      */
     get: function(){
       var classes = self.element.getAttributeNS(null, "class");
-      if(classes !== null){
+      if(classes !== null && classes != ""){
         return classes.split(" ");
       }
       return [];
     }
   });
+
+  var add_callback = function(obj, name, setfunc, getfunc){
+    Object.defineProperty(obj, name, {
+      set: setfunc,
+      configurable: false,
+    });
+  };
+
+  add_callback(this, "onclick", function(cb){self.element.onclick = cb;});
+  add_callback(this, "onmouseover", function(cb){self.element.onmouseover = cb;});
 }
 
 svg.element.extends(svg.node);
@@ -181,22 +191,24 @@ svg.element.prototype.add_class = function(cls){
       this.element.getAttributeNS(null, "class") + " " + cls);
 }
 
-/**
- * Sets the 'click' callback
- *
- * @param cb - a callback function
- */
-svg.element.prototype.onclick = function(cb){
-  this.element.onclick = cb;
-}
+svg.element.prototype.remove_class = function(cls){
+  // If there are no classes, just return
+  if(this.classes.length == 0){
+    return;
+  }
 
-/**
- * Sets the 'mouse over' callback
- *
- * @param cb - a callback function
- */
-svg.element.prototype.onmouseover = function(cb){
-  this.element.onmouseover = cb;
+  // Remove the class
+  var classes = this.classes;
+  while(true){
+    var index = classes.indexOf(cls);
+    if(index == -1){
+      break;
+    }
+    classes.splice(index, 1);
+  }
+
+  // Append the new class
+  this.element.setAttributeNS(null, "class", classes.join());
 }
 
 /**
