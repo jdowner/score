@@ -152,6 +152,16 @@ svg.element = function(root, element){
       return [];
     }
   });
+
+  var add_callback = function(obj, name, setfunc, getfunc){
+    Object.defineProperty(obj, name, {
+      set: setfunc,
+      configurable: false,
+    });
+  };
+
+  add_callback(this, "onclick", function(cb){self.element.onclick = cb;});
+  add_callback(this, "onmouseover", function(cb){self.element.onmouseover = cb;});
 }
 
 svg.element.extends(svg.node);
@@ -180,25 +190,6 @@ svg.element.prototype.add_class = function(cls){
   this.element.setAttributeNS(null, "class",
       this.element.getAttributeNS(null, "class") + " " + cls);
 }
-
-/**
- * Sets the 'click' callback
- *
- * @param cb - a callback function
- */
-svg.element.prototype.onclick = function(cb){
-  this.element.onclick = cb;
-}
-
-/**
- * Sets the 'mouse over' callback
- *
- * @param cb - a callback function
- */
-svg.element.prototype.onmouseover = function(cb){
-  this.element.onmouseover = cb;
-}
-
 
 svg.element.prototype.remove_class = function(cls){
   // If there are no classes, just return
