@@ -146,7 +146,7 @@ svg.element = function(root, element){
      */
     get: function(){
       var classes = self.element.getAttributeNS(null, "class");
-      if(classes !== null){
+      if(classes !== null && classes != ""){
         return classes.split(" ");
       }
       return [];
