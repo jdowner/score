@@ -199,6 +199,27 @@ svg.element.prototype.onmouseover = function(cb){
   this.element.onmouseover = cb;
 }
 
+
+svg.element.prototype.remove_class = function(cls){
+  // If there are no classes, just return
+  if(this.classes.length == 0){
+    return;
+  }
+
+  // Remove the class
+  var classes = this.classes;
+  while(true){
+    var index = classes.indexOf(cls);
+    if(index == -1){
+      break;
+    }
+    classes.splice(index, 1);
+  }
+
+  // Append the new class
+  this.element.setAttributeNS(null, "class", classes.join());
+}
+
 /**
  * Translates this element.
  *

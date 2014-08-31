@@ -69,6 +69,7 @@
         group: new svg.group(root),
       };
 
+      // test addition of the classes
       for(var name in objects){
         var obj = objects[name];
         equal(obj.classes.length, 0);
@@ -80,6 +81,19 @@
         equal(obj.classes.length, 2);
         equal(obj.classes[0], 'foo');
         equal(obj.classes[1], 'bar');
+      }
+
+      // test removal of the classes
+      for(var name in objects){
+        var obj = objects[name];
+        equal(obj.classes.length, 2);
+
+        obj.remove_class('foo');
+        equal(obj.classes.length, 1);
+        equal(obj.classes[0], 'bar');
+
+        obj.remove_class('bar');
+        equal(obj.classes.length, 0);
       }
     })
 
