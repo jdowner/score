@@ -135,6 +135,7 @@ svg.definition.prototype.create = function(id, x, y){
  * classes.
  */
 svg.element = function(root, element){
+  svg.node.call(this);
   this.root = root || null;
   this.element = element;
 
