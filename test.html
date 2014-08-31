@@ -39,6 +39,26 @@
       ok(new svg.path(root, 'M 110 20 L 140 40'));
     });
 
+    test("node id", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      equal(root.id, 'test-root');
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      for(var key in objects){
+        var obj = objects[key];
+        equal(obj.id, null);
+
+        obj.id = "foo";
+        equal(obj.id, "foo");
+      }
+    })
+
     test("element attributes", function(){
       var root = new svg.root(document.getElementById("test-root"));
 
