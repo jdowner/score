@@ -28,6 +28,20 @@ var svg = {
 svg.node = function(){
   this.root = null;
   this.element = null;
+
+  var self = this;
+
+  Object.defineProperty(self, "id", {
+    get: function(){
+      if(self.element === null){
+        return null;
+      }
+      return self.element.getAttributeNS(null, "id");
+    },
+    set: function(id){
+      this.element.setAttributeNS(null, "id", id);
+    }
+  });
 }
 
 /**
@@ -135,6 +149,7 @@ svg.definition.prototype.create = function(id, x, y){
  * classes.
  */
 svg.element = function(root, element){
+  svg.node.call(this);
   this.root = root || null;
   this.element = element;
 
