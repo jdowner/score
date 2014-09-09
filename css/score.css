@@ -1,0 +1,45 @@
+.score-measure {
+  stroke: black;
+  stroke-linejoin: round;
+  fill: none;
+  pointer-events: all;
+}
+
+.score-canvas {
+  background-color: #D0D0B0;
+}
+
+.score-overlay {
+  stroke: #aa3333;
+  fill: none;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.score-note:hover {
+  fill: #303030;
+}
+
+.score-button {
+  fill: #606060;
+  stroke: #303030;
+}
+
+.score-transparent {
+  fill: none;
+  opacity: 0;
+}
+
+.score-event-block {
+  pointer-event: none;
+}
+
+.score-button-overlay {
+  fill: black;
+  pointer-events: all;
+  opacity: 1;
+}
+
+.score-inactive {
+  opacity: 0.6;
+}

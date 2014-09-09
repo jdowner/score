@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>score test</title>
+  </head>
+  <link rel="stylesheet" href="css/qunit-1.14.0.css">
+  <script src="src/svg.js"></script>
+  <script src="src/parser.js"></script>
+  <script src="libs/qunit-1.14.0.js"></script>
+  <script src="libs/jquery-2.0.3.min.js"></script>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <svg id="test-root">
+      <g id="test-group">
+        <rect x="10" y="20" width="30" height="40" />
+      </g>
+    </svg>
+  </body>
+  <script>
+    test("smoke-test", function(){
+      ok(true);
+    })
+
+    module("svg");
+
+    test("constructors", function(){
+      throws(function(){
+        return new svg.root(document.getElementById("test-group"));
+      });
+      var root = new svg.root(document.getElementById("test-root"))
+      ok(root);
+      ok(new svg.node());
+      ok(new svg.element());
+      ok(new svg.proxy(document.getElementById("test-group")));
+      ok(new svg.group(root));
+      ok(new svg.rect(root, 60, 20, 30, 40));
+      ok(new svg.path(root, 'M 110 20 L 140 40'));
+    });
+
+    test("node id", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      equal(root.id, 'test-root');
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      for(var key in objects){
+        var obj = objects[key];
+        equal(obj.id, null);
+
+        obj.id = "foo";
+        equal(obj.id, "foo");
+      }
+    })
+
+    test("element attributes", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      for(var key in objects){
+        var obj = objects[key];
+
+        obj.attr('foo', 'bar');
+        equal(obj.get('foo'), 'bar');
+
+        obj.attrs({foo: 'baz', bar: 'foo'});
+        equal(obj.get('foo'), 'baz');
+        equal(obj.get('bar'), 'foo');
+      }
+    });
+
+    test("element classes property", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      // test addition of the classes
+      for(var name in objects){
+        var obj = objects[name];
+        equal(obj.classes.length, 0);
+
+        obj.add_class('foo');
+        obj.add_class('foo');
+        obj.add_class('bar');
+
+        equal(obj.classes.length, 2);
+        equal(obj.classes[0], 'foo');
+        equal(obj.classes[1], 'bar');
+      }
+
+      // test removal of the classes
+      for(var name in objects){
+        var obj = objects[name];
+        equal(obj.classes.length, 2);
+
+        obj.remove_class('foo');
+        equal(obj.classes.length, 1);
+        equal(obj.classes[0], 'bar');
+
+        obj.remove_class('bar');
+        equal(obj.classes.length, 0);
+      }
+    })
+
+    test("element add child", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      for(var name in objects){
+        var obj = objects[name];
+        equal(obj.element.childElementCount, 0);
+        equal(obj.children().length, 0);
+
+        obj.add(new svg.group());
+        equal(obj.element.childElementCount, 1)
+        equal(obj.children().length, 1);
+      }
+    });
+
+    test("element translation", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      for(var name in objects){
+        var obj = objects[name];
+        obj.translate(10,20);
+        equal(obj.get('transform'), 'translate(10, 20)');
+      }
+    });
+
+    test("element rotation", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      for(var name in objects){
+        var obj = objects[name];
+        obj.rotate(30, 10,20);
+        equal(obj.get('transform'), 'rotate(30, 10, 20)');
+      }
+    });
+
+    test("element scale", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      for(var name in objects){
+        var obj = objects[name];
+        obj.scale(30);
+        equal(obj.get('transform'), 'scale(30)');
+      }
+    });
+
+    test("element interaction", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+
+      var objects = {
+        path: new svg.path(root, 'M 110 20 L 140 40'),
+        rect: new svg.rect(root, 60, 20, 30, 40),
+        group: new svg.group(root),
+      };
+
+      // test the onclick callback
+      for(var key in objects){
+        var obj = objects[key];
+        var triggered = false;
+
+        obj.onclick = function(){triggered=true;};
+        $(obj.element).trigger('onclick');
+        ok(triggered);
+      }
+
+      // test the onmouseover callback
+      for(var key in objects){
+        var obj = objects[key];
+        var triggered = false;
+
+        obj.onmouseover = function(){triggered=true;};
+        $(obj.element).trigger('onmouseover');
+        ok(triggered);
+      }
+    });
+
+    test("svg.path constructions", function(){
+      var root = new svg.root(document.getElementById("test-root"));
+      var path = new svg.path(root);
+
+      equal(path.get("d"), "");
+
+      path.move_to(10, 12);
+      path.line_to(20, 23);
+      path.close();
+
+      equal(path.get("d"), "M 10 12 L 20 23 z");
+    })
+
+    test("svg.parser valid symbol", function(){
+      ok(score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4s|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+    })
+
+    test("svg.parser beam mismatch", function(){
+      ok(!score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4r|8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+      ok(!score.is_valid_score( '4n 4r|8n 8n 8n 8n 2r)| (4n 4n (8n 8n) 4n'));
+      ok(!score.is_valid_score( '4n 4r|((8n 8n 8n 8n 2r)| (4n 4n (8n 8n) 4n))'));
+
+      ok(score.is_valid_score( '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n'));
+      ok(score.is_valid_score('4n 4r 4n 4r'));
+    })
+
+    test("svg.parser single measure", function(){
+      measures = score.parse('4n 4r 4n 4r');
+
+      equal(measures.length, 1);
+      equal(measures[0].children[0].name, '4n');
+      equal(measures[0].children[1].name, '4r');
+      equal(measures[0].children[2].name, '4n');
+      equal(measures[0].children[3].name, '4r');
+    })
+
+    test("svg.parser AST creation", function(){
+      var content = '4n 4r|(8n 8n 8n 8n 2r)| (4n 4n (8n 8n)) 4n';
+      measures = score.parse(content);
+
+      equal(measures.length, 3);
+
+      equal(measures[0].children.length, 2);
+      equal(measures[1].children.length, 1);
+      equal(measures[2].children.length, 2);
+
+      equal(measures[0].children[0].name, '4n');
+      equal(measures[0].children[1].name, '4r');
+
+      equal(measures[1].children[0].children.length, 5);
+      equal(measures[1].children[0].children[0].name, '8n');
+      equal(measures[1].children[0].children[1].name, '8n');
+      equal(measures[1].children[0].children[2].name, '8n');
+      equal(measures[1].children[0].children[3].name, '8n');
+      equal(measures[1].children[0].children[4].name, '2r');
+
+      equal(measures[2].children[0].children.length, 3);
+      equal(measures[2].children[0].children[0].name, '4n');
+      equal(measures[2].children[0].children[1].name, '4n');
+      equal(measures[2].children[0].children[2].children.length, 2);
+      equal(measures[2].children[0].children[2].children[0].name, '8n');
+      equal(measures[2].children[0].children[2].children[1].name, '8n');
+      equal(measures[2].children[1].name, '4n');
+    })
+
+    test("svg.parser traversal", function(){
+      var original = '4n 4r | (8n 8n 8n 8n 2r) | (4n 4n (8n 8n)) 4n';
+      var measures = score.parse(original);
+
+      var content = '';
+
+      var traversal = new score.traversal();
+      traversal.on_beam_begin = function(){
+        content = content + ' ( ';
+      }
+
+      traversal.on_beam_end = function(){
+        content = content + ' ) ';
+      }
+
+      traversal.on_bar = function(){
+        content = content + ' | ';
+      }
+
+      traversal.on_note = function(note){
+        content = content + ' ' + note + ' ';
+      }
+
+      traversal.foreach(measures);
+      content = content.trim();
+      content = content.replace(/\s\s+/g, ' ');
+      content = content.replace(/\(\s/g, '(');
+      content = content.replace(/\s\)/g, ')');
+
+      equal(content, original);
+    })
+  </script>
+</html>

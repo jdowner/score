@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>score-example</title>
+  </head>
+  <link rel="stylesheet" href="css/score.css">
+  <script src="libs/jquery-2.0.3.min.js"></script>
+  <script src="src/parser.js"></script>
+  <script src="src/svg.js"></script>
+  <script src="src/glyphs.js"></script>
+  <script src="src/score.js"></script>
+  <script src="src/canvas.js"></script>
+  <body>
+    <svg class="score-canvas" id="new-canvas" width="1400px" height="600px" />
+  </body>
+  <script>
+    // Define the notes
+    var notes = ""
+    notes = notes + "4n 4n 4n 4n | 8r 8n 4n 8r 4n 8r | 4r 4n 4n 4r | 8r 4n 8n 8r 8n 4r"
+    notes = notes + " | 8r 8n 4n 4n 4r | 4r 4r 4n 8r 8n | 4n 8r 8n 8r 8n 4r | 4r 4n 4r 4n"
+    notes = notes + " | 4r (8n 8n) (8n 8n) 4r | 4n 4r 4r 4n | 8r 8n 8r 8n 4n 4r | 4n 4n 4r 8r 8n"
+    notes = notes + " | 4r 8r 8n 8r 8n 4r | 4n 4r 4n 4r | (8n 8n 8n 8n) 4r 4r | 4n 8r 8n 4r 8r 8n"
+    notes = notes + " | 8r 8n 4n 8r 8n (8n 8n) | 4r (8n 8n) 4r (8n 8n) | 4n 8r 8n 8r 8n 4n | 4r 4n 4r (8n 8n)"
+    notes = notes + " | (8n 8n) 4r 4r (8n 8n) | 4r (8n 8n) 8r 8n 4r | 4r 4n 4r 8r 8n | 4n 4n 4r 4n"
+    notes = notes + " | 8r 8n 4n 4r (8n 8n) | 4r 4r 4r 4n | 4r (8n 8n) 4r 8r 8n | 8r 8n 4n (8n 8n) 4r"
+    notes = notes + " | 4r 4r (8n 8n 8n 8n) | 8r 8n 4n 4n 4r | 4r (8n 8n) 4r 8n 8r | 4n 4r 8r 8n (8n 8n)"
+    notes = notes + " | 4r 4n 4r 8n 8r | (8n 8n 8n 8n) 4r 4r | 4n 8r 8n 4r 4n | (8n 8n 8n 8n) (8n 8n 8n 16n 16n)"
+
+
+    function init() {
+      var c = new canvas('new-canvas');
+      for(var i = 0; i < 20; i++){
+        c.measures.push(0);
+      }
+
+      c.draw();
+    }
+
+    window.addEventListener('load', init, false)
+  </script>
+</html>
